@@ -1,0 +1,28 @@
+name: Proxy HTTP Request to Local Server
+
+on:
+  workflow_dispatch:
+    inputs:
+      json_data:
+        description: 'JSON data to send to local server'
+        required: true
+        type: string
+
+jobs:
+  proxy_request:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Forward request to local server
+      run: |
+        # Extract the JSON data passed from Roblox game
+        json_data="${{ github.event.inputs.json_data }}"
+
+        # Your local server URL
+        local_server_url="http://your-local-server-ip:port"  # Replace with your local server
+
+        # Use curl to forward the request to your local server
+        response=$(curl -X POST "$local_server_url/receive-data" -H "Content-Type: application/json" -d "$json_data")
+
+        # Output the response
+        echo "Response from local server: $response"
